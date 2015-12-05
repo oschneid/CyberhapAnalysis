@@ -16,6 +16,9 @@ study1.data$PID <- factor(study1.data$PID)
 study1.data$Condition.Number <- factor(study1.data$Condition.Number)
 
 
+
+
+
 #
 #
 # CHI SQ/Fisher's Exact Test analysis of SCORE ratings
@@ -74,6 +77,8 @@ qplot(PID,
       facets=Spring.Pair~Condition,
       #color=Spring.Pair
       )
+
+#NEXT UP: Use GGPLOT to produce box plots in each facet
 
 #
 #
