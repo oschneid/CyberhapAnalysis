@@ -5,15 +5,18 @@ require(ggplot2)
 require(Exact)
 require(MASS)
 require(car)
+library(lsmeans)
 
 
-study1.data <- read.csv("CyberhapData-Oliver.csv")
+study1.data <- read.csv("CyberhapData-151210-GM.csv")
 
 #Data cleanup - set types to discrete factors
 study1.data <- study1.data[study1.data$Training==FALSE,]
 study1.data$Spring.Pair <- factor(study1.data$Spring.Pair)
 study1.data$PID <- factor(study1.data$PID)
 study1.data$Condition.Number <- factor(study1.data$Condition.Number)
+study1.data$Difficulty..0.19. <- as.numeric(study1.data$Difficulty..0.19.)
+
 
 
 
@@ -39,7 +42,7 @@ fisher.test(table(study1.data$Condition, study1.data$Score..0.1.))
 
 #Logistic Regression analysis of score
 study1.model <- glm(
-  Score..0.1.~Condition*Spring.Pair*PID, 
+  Score..0.1.~PID+Condition+Spring.Pair,
   #Score..0.1.~Condition+Spring.Pair+1, 
   #Score..0.1.~Spring.Pair, 
   data = study1.data,
@@ -60,6 +63,9 @@ exp(confint(fit)) # 95% CI for exponentiated coefficients
 summary(predict(fit, type="response")) # predicted values
 residuals(fit, type="deviance") # residuals
 
+
+
+
 #
 #
 # Plotting Scores
@@ -77,6 +83,23 @@ qplot(PID,
       facets=Spring.Pair~Condition,
       #color=Spring.Pair
       )
+
+p <- ggplot(study1.data.aggregatescore, aes(x=Spring.Pair, y=Score))
+p <- p + facet_grid(Condition~.)
+p <- p + geom_boxplot()
+p
+
+p <- ggplot(study1.data.aggregatescore, aes(x=Spring.Pair, y=Score))
+p <- p + facet_grid(Condition~.)
+p <- p + geom_boxplot()
+p
+
+qplot(PID,
+      Score,
+      data=study1.data.aggregatescore,
+      facets=Spring.Pair~Condition,
+      #color=Spring.Pair
+)
 
 #NEXT UP: Use GGPLOT to produce box plots in each facet
 
@@ -96,20 +119,26 @@ confint(study1.difficulty.model)
 
 #Following two graphs indicate that P1, P5, and P6 found different spring pair have an effect on difficulty
 #Other participants don't
-qplot(Difficulty..0.19.,  data=study1.data, geom="density",
+qplot(Difficulty..0.19.,  data=study1.data, geom="histogram",
       facets=PID~.,
       color=Spring.Pair)
-qplot(Difficulty..0.19.,  data=study1.data, geom="density",
+qplot(Difficulty..0.19.,  data=study1.data, geom="histogram",
       facets=PID~.,
       color=Condition.Number)
 
-qplot(Difficulty..0.19.,  data=study1.data, geom="density",
-      facets=PID~Condition,
-      color=Spring.Pair)
+qplot(Difficulty..0.19.,  data=study1.data, geom="histogram",
+      facets=PID~Spring.Pair,
+      color=Condition)
 #PID*SpringPair is significant for difficulty
 
 study1.difficulty.model.interaction <- lm(Difficulty..0.19.-9.5~PID*Spring.Pair*Condition, data=study1.data)
 anova(study1.difficulty.model.interaction)
 Anova(study1.difficulty.model.interaction, type=3)
 confint(study1.difficulty.model.interaction)
+
+
+p <- ggplot(study1.data, aes(x=Spring.Pair, y=Difficulty..0.19.))
+p <- p + facet_grid(Condition~PID)
+p <- p + geom_boxplot()
+p
 
