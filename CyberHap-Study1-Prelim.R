@@ -18,7 +18,7 @@ study1.data$Spring.Pair <- factor(study1.data$Spring.Pair)
 study1.data$PID <- factor(study1.data$PID)
 study1.data$Condition.Number <- factor(study1.data$Condition.Number)
 study1.data$Difficulty..0.19. <- as.numeric(study1.data$Difficulty..0.19.)
-
+study1.data$Time.on.Task..sec. <- as.numeric(study1.data$Time.on.Task..sec.)
 
 
 
@@ -127,3 +127,24 @@ qplot(PID,
 )
 
 #NEXT UP: Use GGPLOT to produce box plots in each facet
+
+
+#
+# Check between dependent variables 
+#
+
+study1.score.time.mdl <- glm(Score..0.1.~Time.on.Task..sec., data=study1.data, family="binomial")
+summary(study1.score.time.mdl)
+
+
+study1.score.time.mdl <- glm(Score..0.1.~PID+Time.on.Task..sec.+Difficulty..0.19., data=study1.data, family=binomial)
+summary(study1.score.time.mdl)
+
+
+study1.score.time.mdl <- lm(Time.on.Task..sec.~Score..0.1.+Difficulty..0.19., data=study1.data)
+summary(study1.score.time.mdl)
+
+
+study1.score.time.mdl <- lm(Difficulty..0.19.~Score..0.1.+Time.on.Task..sec., data=study1.data)
+summary(study1.score.time.mdl)
+
