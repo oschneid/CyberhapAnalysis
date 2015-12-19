@@ -51,9 +51,9 @@ study1.model <- glm(
   family=binomial())
 Anova(study1.model, type=3)
 summary(study1.model)
-drop1(study1.model)
+# drop1(study1.model)
 #cdplot(Score..0.1.~Condition, data=study1.data)
-exp(cbind(coef(study1.model), confint(study1.model)))  
+# exp(cbind(coef(study1.model), confint(study1.model)))  
 
 study1.model <- glm(
   Score..0.1.~Condition+Spring.Pair,
@@ -69,61 +69,13 @@ study1.score.lsm$lsmean <- exp(study1.score.lsm$lsmean)
 # study1.score.lsm$PID <- factor(study1.score.lsm$Condition)
 study1.score.lsm$Spring.Pair <- factor(study1.score.lsm$Spring.Pair)
 
-study1.score.lsm$lsm_percent <- study1.score.lsm$lsmean / (study1.score.lsm$lsmean+1)
-study1.score.lsm$asymp.LCL_percent <- study1.score.lsm$asymp.LCL / (study1.score.lsm$asymp.LCL+1)
-study1.score.lsm$asymp.UCL_percent <- study1.score.lsm$asymp.UCL / (study1.score.lsm$asymp.UCL+1)
+study1.score.lsm$lsm_percent <- study1.score.lsm$lsmean / (study1.score.lsm$lsmean+1) * 100
+study1.score.lsm$asymp.LCL_percent <- study1.score.lsm$asymp.LCL / (study1.score.lsm$asymp.LCL+1) * 100
+study1.score.lsm$asymp.UCL_percent <- study1.score.lsm$asymp.UCL / (study1.score.lsm$asymp.UCL+1) * 100
 
 
 p <- ggplot(study1.score.lsm, aes(y=lsm_percent, x=Spring.Pair))
 p <- p + geom_pointrange(aes(ymin=asymp.LCL_percent, ymax=asymp.UCL_percent)); #geom_linerange geom_pointrange
+p <- p + labs(y="Score (%)", title="Cyberhap Study 1 Scores 95% Confidence Intervals by Spring Pair", x="Spring Pair");
+p <- p + expand_limits(y=c(50, 100))
 p
-
-
-#FROM statmethods.org
-fit <- study1.model
-summary(fit) # display results
-confint(fit) # 95% CI for the coefficients
-exp(coef(fit)) # exponentiated coefficients
-exp(confint(fit)) # 95% CI for exponentiated coefficients
-summary(predict(fit, type="response")) # predicted values
-residuals(fit, type="deviance") # residuals
-
-
-
-
-#
-#
-# Plotting Scores
-#
-#
-
-attach(study1.data)
-study1.data.aggregatescore <- aggregate(Score..0.1., by=list(PID, Condition, Condition.Number, Spring.Pair), FUN=mean, data=study1.data)
-detach(study1.data)
-names(study1.data.aggregatescore) <- c("PID", "Condition", "Condition.Number", "Spring.Pair", "Score")
-
-qplot(PID,
-      Score,
-      data=study1.data.aggregatescore,
-      facets=Spring.Pair~Condition,
-      #color=Spring.Pair
-      )
-
-p <- ggplot(study1.data.aggregatescore, aes(x=Spring.Pair, y=Score))
-p <- p + facet_grid(Condition~.)
-p <- p + geom_boxplot()
-p
-
-p <- ggplot(study1.data.aggregatescore, aes(x=Spring.Pair, y=Score))
-p <- p + facet_grid(Condition~.)
-p <- p + geom_boxplot()
-p
-
-qplot(PID,
-      Score,
-      data=study1.data.aggregatescore,
-      facets=Spring.Pair~Condition,
-      #color=Spring.Pair
-)
-
-#NEXT UP: Use GGPLOT to produce box plots in each facet
