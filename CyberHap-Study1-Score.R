@@ -28,7 +28,9 @@ study1.model <- glm(
   family=binomial())
 summary(study1.model)
 #LS Means analysis
-study1.score.lsm <- summary(lsmeans(study1.model, ~Spring.Pair));
+study1.score.lsm <- lsmeans(study1.model, ~Spring.Pair)
+pairs(study1.score.lsm)
+study1.score.lsm <- summary(study1.score.lsm);
 #study1.score.lsm$lower.CL <- exp(study1.score.lsm$lower.CL)
 study1.score.lsm$asymp.LCL <- exp(study1.score.lsm$asymp.LCL)
 #study1.score.lsm$upper.CL <- exp(study1.score.lsm$upper.CL)

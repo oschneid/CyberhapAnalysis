@@ -57,7 +57,9 @@ p
 
 
 #plot CIs using lsmeans for PID/Spring.Pair interaction
-study1.time.lsm.interaction <- summary(lsmeans(study1.time.model.interaction, ~PID))
+study1.time.lsm.interaction <- lsmeans(study1.time.model.interaction, ~PID)
+pairs(study1.time.lsm.interaction)
+study1.time.lsm.interaction <- summary(study1.time.lsm.interaction)
 study1.time.lsm.interaction$PID <- factor(study1.time.lsm.interaction$PID)
 
 p <- ggplot(study1.time.lsm.interaction, aes(y=lsmean, x=PID))
