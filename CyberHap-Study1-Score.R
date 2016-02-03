@@ -46,7 +46,12 @@ study1.score.lsm$asymp.UCL_percent <- study1.score.lsm$asymp.UCL / (study1.score
 study1.score.lsm
 
 p <- ggplot(study1.score.lsm, aes(y=lsm_percent, x=Spring.Pair))
-p <- p + geom_pointrange(aes(ymin=asymp.LCL_percent, ymax=asymp.UCL_percent)); #geom_linerange geom_pointrange
+p <- p + geom_pointrange(aes(ymin=asymp.LCL_percent, ymax=asymp.UCL_percent),  size=1.5); #geom_linerange geom_pointrange
 p <- p + labs(y="Score (%)", title="Cyberhap Study 1 Scores 95% Confidence Intervals by Spring Pair", x="Spring Pair");
-p <- p + expand_limits(y=c(50, 100))
+p <- p + expand_limits(y=c(60, 100))
+p <- p + geom_text(aes(label=strtrim(lsm_percent, 5), y=lsm_percent, x=as.numeric(Spring.Pair)+0.2))
+p <- p + geom_text(aes(label=strtrim(asymp.LCL_percent, 5), y=asymp.LCL_percent, x=as.numeric(Spring.Pair)+0.2))
+p <- p + geom_text(aes(label=strtrim(asymp.UCL_percent, 5), y=asymp.UCL_percent, x=as.numeric(Spring.Pair)+0.2))
+p <- p + geom_line(data=data.frame(x=c(1,2), y=c(99.5, 99.5), alpha=0.75, size=1), mapping=aes(x=x, y=y), alpha = 0.5) + annotate("text", x=1.5,y=99.5,label="*", size=12, alpha=0.75)
 p
+
