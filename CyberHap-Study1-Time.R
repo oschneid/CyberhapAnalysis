@@ -70,3 +70,5 @@ p <- p + labs(y="Time on Task (s)", title="Cyberhap Study 1 Time 95% Confidence 
 p
 
 
+
+summary(study1.data$Time.on.Task..sec.)
